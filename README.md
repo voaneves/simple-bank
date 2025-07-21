@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/simple-bank">
-    <img src="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/img/logo.svg" alt="Logo" width="160" height="160">
+    <img src="assets/img/logo.svg" alt="Logo" width="160" height="160">
   </a>
   <h3 align="center">Simple Bank</h3>
   <p align="center">
@@ -66,7 +66,6 @@ O objetivo não é ser um produto financeiro, mas sim um portfólio robusto que 
 <div align="center">
   <img src="assets/img/screenshot.png" alt="Screenshot do terminal executando o Simple Bank">
 </div>
-<p align="center"><i>(Sugestão: tire um screenshot do seu terminal executando o programa e salve em <code>assets/img/screenshot.png</code>)</i></p>
 
 ### 🛠️ Tecnologias Utilizadas
 
