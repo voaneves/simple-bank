@@ -507,7 +507,7 @@ def main():
             executar_saque(clientes)
         elif opcao == 'e':
             exibir_extrato_cliente(clientes)
-        elif opcao == 'u':
+        elif opcao == 'nu':
             criar_cliente(clientes)
         elif opcao == 'nc':
             criar_conta(contas, clientes)
