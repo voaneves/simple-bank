@@ -1,56 +1,39 @@
 # -*- coding: utf-8 -*-
-"""Simple Bank - Módulo Principal v2.0
+"""Simple Bank - Módulo Principal v2.1
 
-Esta versão evolui o sistema bancário, introduzindo exceções customizadas para
-um desacoplamento total entre a lógica de negócio e a interface, validação de
-entrada de dados para maior robustez e uma sintaxe de função mais explícita com
-argumentos positional-only.
+Esta versão evolui o sistema bancário para a v2.1, introduzindo a persistência
+de dados utilizando arquivos JSON. Agora, o estado da aplicação (clientes e
+contas) é salvo ao sair e carregado ao iniciar, mantendo as melhorias da v2.0
+como exceções customizadas, validação de entrada e uma sintaxe de função mais
+explícita.
 
 Examples:
-    O exemplo abaixo demonstra o uso programático e o tratamento de exceções,
-    que é uma das principais melhorias desta versão.
-
-    ::
-
-        # 1. Setup inicial
-        cliente = Cliente(nome="Ana Paula", cpf="11122233344")
-        conta = ContaCorrente(numero=1, cliente=cliente)
-        cliente.adicionar_conta(conta)
-
-        # 2. Transação bem-sucedida
-        try:
-            deposito = Deposito(2000.0)
-            cliente.realizar_transacao(conta, deposito)
-            print(f"Depósito realizado com sucesso! Saldo: {conta.saldo:.2f}")
-        except ErroBancario as e:
-            print(e)
-
-        # 3. Tentativa de saque com saldo insuficiente (tratando a exceção)
-        try:
-            saque_alto = Saque(2500.0)
-            cliente.realizar_transacao(conta, saque_alto)
-        except SaldoInsuficienteError as e:
-            print(f"Erro capturado: {e.message}")
-
+    O fluxo de uso permanece o mesmo, mas os dados agora persistem:
+    1. Execute o programa. Crie um usuário e uma conta.
+    2. Saia do programa (opção 'q'). Os dados serão salvos em `dados_banco.json`.
+    3. Execute o programa novamente.
+    4. Use a opção 'lc' (Listar contas). A conta que você criou anteriormente
+       será exibida, demonstrando que os dados foram carregados com sucesso.
 
 Attributes:
     COR_VERDE (str): Código de escape ANSI para a cor verde no terminal.
     COR_VERMELHA (str): Código de escape ANSI para a cor vermelha.
     COR_AMARELA (str): Código de escape ANSI para a cor amarela.
     COR_AZUL (str): Código de escape ANSI para a cor azul.
-    NEGRITO (str): Código de escape ANSI для o estilo de texto em negrito.
+    NEGRITO (str): Código de escape ANSI para o estilo de texto em negrito.
     RESET_COR (str): Código de escape ANSI para resetar a formatação de texto.
 
 Author:
     Victor Neves - github.com/voaneves
 
 Version:
-    2.0
+    2.1
 
 License:
     MIT
 """
 
+import json
 import logging
 import os
 import sys
@@ -58,6 +41,9 @@ import textwrap
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List, Optional, Tuple
+
+# --- Constantes ---
+NOME_ARQUIVO_DADOS = "dados_banco.json"
 
 # --- Configuração de Logging ---
 logging.basicConfig(
@@ -75,7 +61,7 @@ COR_AZUL = '\033[94m'
 NEGRITO = '\033[1m'
 RESET_COR = '\033[0m'
 
-# --- Exceções Customizadas (Melhoria v2.0) ---
+# --- Exceções Customizadas ---
 class ErroBancario(Exception):
     """Classe base para exceções customizadas do sistema bancário."""
     pass
@@ -176,41 +162,48 @@ class Transacao(ABC):
         pass
 
 class Saque(Transacao):
-    """Representa uma transação de saque."""
+    """Representa uma transação de saque.
+
+    Attributes:
+        _valor (float): O valor a ser sacado.
+    """
     def __init__(self, valor: float):
         self._valor = valor
-
     @property
     def valor(self) -> float:
         return self._valor
-
     def registrar(self, conta: 'Conta'):
         conta.sacar(self.valor)
         conta.historico.adicionar_transacao(self)
 
 class Deposito(Transacao):
-    """Representa uma transação de depósito."""
+    """Representa uma transação de depósito.
+
+    Attributes:
+        _valor (float): O valor a ser depositado.
+    """
     def __init__(self, valor: float):
         self._valor = valor
-
     @property
     def valor(self) -> float:
         return self._valor
-
     def registrar(self, conta: 'Conta'):
         conta.depositar(self.valor)
         conta.historico.adicionar_transacao(self)
 
 class Historico:
-    """Armazena e gerencia o histórico de transações de uma conta."""
+    """Armazena e gerencia o histórico de transações de uma conta.
+
+    Attributes:
+        _transacoes (list): Uma lista de tuplas, onde cada tupla contém
+            a data/hora e a instância da transação.
+    """
     def __init__(self):
         self._transacoes: List[Tuple[datetime, Transacao]] = []
-
     @property
     def transacoes(self) -> List[Tuple[datetime, Transacao]]:
         """list: Uma cópia da lista de transações para evitar mutações externas."""
         return self._transacoes[:]
-
     def adicionar_transacao(self, transacao: Transacao):
         """Adiciona uma nova transação ao histórico.
 
@@ -235,37 +228,20 @@ class Conta:
         self._agencia: str = "0001"
         self._cliente: 'Cliente' = cliente
         self._historico: Historico = Historico()
-
     @property
-    def saldo(self) -> float:
-        """float: Saldo atual da conta."""
-        return self._saldo
-
+    def saldo(self) -> float: return self._saldo
     @property
-    def numero(self) -> int:
-        """int: Número da conta."""
-        return self._numero
-
+    def numero(self) -> int: return self._numero
     @property
-    def agencia(self) -> str:
-        """str: Número da agência."""
-        return self._agencia
-
+    def agencia(self) -> str: return self._agencia
     @property
-    def cliente(self) -> 'Cliente':
-        """Cliente: Objeto cliente associado à conta."""
-        return self._cliente
-
+    def cliente(self) -> 'Cliente': return self._cliente
     @property
-    def historico(self) -> Historico:
-        """Historico: Histórico de transações da conta."""
-        return self._historico
-
+    def historico(self) -> Historico: return self._historico
     @classmethod
     def nova_conta(cls, cliente: 'Cliente', numero: int) -> 'Conta':
         """Método de fábrica para criar uma nova instância de conta."""
         return cls(numero, cliente)
-
     def sacar(self, valor: float, /):
         """Realiza um saque na conta, com validações básicas.
 
@@ -280,13 +256,10 @@ class Conta:
             ValorInvalidoError: Se o valor do saque for menor ou igual a zero.
             SaldoInsuficienteError: Se o valor do saque for maior que o saldo.
         """
-        if valor <= 0:
-            raise ValorInvalidoError()
-        if self._saldo < valor:
-            raise SaldoInsuficienteError(self._saldo, valor)
+        if valor <= 0: raise ValorInvalidoError()
+        if self._saldo < valor: raise SaldoInsuficienteError(self._saldo, valor)
         self._saldo -= valor
         logging.info(f"SAQUE: R$ {valor:.2f} - Conta: {self.numero}")
-
     def depositar(self, valor: float, /):
         """Realiza um depósito na conta.
 
@@ -296,18 +269,21 @@ class Conta:
         Raises:
             ValorInvalidoError: Se o valor do depósito for menor ou igual a zero.
         """
-        if valor <= 0:
-            raise ValorInvalidoError()
+        if valor <= 0: raise ValorInvalidoError()
         self._saldo += valor
         logging.info(f"DEPÓSITO: R$ {valor:.2f} - Conta: {self.numero}")
 
 class ContaCorrente(Conta):
-    """Representa uma conta corrente com regras de negócio específicas."""
+    """Representa uma conta corrente com regras de negócio específicas.
+
+    Attributes:
+        _limite (float): O valor máximo permitido por saque.
+        _limite_saques (int): O número máximo de saques permitidos por dia.
+    """
     def __init__(self, numero: int, cliente: 'Cliente', limite: float = 500.0, limite_saques: int = 3):
         super().__init__(numero, cliente)
         self._limite = limite
         self._limite_saques = limite_saques
-
     def sacar(self, valor: float, /):
         """Sobrescreve o método sacar para aplicar regras da conta corrente.
 
@@ -319,30 +295,31 @@ class ContaCorrente(Conta):
             LimiteQtdSaquesError: Se o número de saques diários for excedido.
             (Propaga exceções da classe pai: SaldoInsuficienteError, ValorInvalidoError)
         """
-        saques_hoje = len([
-            t for _, t in self.historico.transacoes if isinstance(t, Saque) and _.date() == datetime.now().date()
-        ])
-        if valor > self._limite:
-            raise LimiteSaqueError(self._limite)
-        if saques_hoje >= self._limite_saques:
-            raise LimiteQtdSaquesError()
-
+        saques_hoje = len([t for _, t in self.historico.transacoes if isinstance(t, Saque) and _.date() == datetime.now().date()])
+        if valor > self._limite: raise LimiteSaqueError(self._limite)
+        if saques_hoje >= self._limite_saques: raise LimiteQtdSaquesError()
         super().sacar(valor)
 
 class Cliente:
-    """Representa um cliente do banco."""
+    """Representa um cliente do banco.
+
+    Attributes:
+        nome (str): Nome completo do cliente.
+        cpf (str): CPF do cliente (usado como identificador).
+        contas (list): Lista de instâncias de Conta associadas ao cliente.
+    """
     def __init__(self, nome: str, cpf: str):
         self.nome = nome
         self.cpf = cpf
         self.contas: List[Conta] = []
-
     def adicionar_conta(self, conta: Conta):
+        """Associa uma conta a este cliente."""
         self.contas.append(conta)
-
     def realizar_transacao(self, conta: Conta, transacao: Transacao):
+        """Inicia uma transação em uma das contas do cliente."""
         transacao.registrar(conta)
 
-# --- Camada de Controle (Controller) ---
+# --- Camada de Controle (Controller) e Persistência ---
 def menu_principal() -> str:
     """Exibe o menu principal e captura a escolha do usuário."""
     menu = """
@@ -357,19 +334,106 @@ def menu_principal() -> str:
     => """
     return input(textwrap.dedent(menu)).lower().strip()
 
+def carregar_dados_json(caminho_arquivo: str) -> Tuple[List[Cliente], List[Conta]]:
+    """Carrega os dados de clientes e contas de um arquivo JSON.
+
+    Tenta ler e decodificar o arquivo JSON especificado. Se o arquivo não
+    existir ou contiver dados inválidos, retorna listas vazias de forma segura.
+    Reconstrói os objetos Cliente e Conta, e suas inter-relações.
+
+    Args:
+        caminho_arquivo (str): O caminho para o arquivo de dados JSON.
+
+    Returns:
+        Tuple[List[Cliente], List[Conta]]: Uma tupla contendo a lista de
+            clientes e a lista de contas reconstruídas.
+    """
+    try:
+        with open(caminho_arquivo, 'r', encoding='utf-8') as f:
+            dados = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return [], []
+
+    clientes = [Cliente(**data) for data in dados.get("clientes", [])]
+    clientes_por_cpf = {c.cpf: c for c in clientes}
+
+    contas = []
+    for data in dados.get("contas", []):
+        cliente = clientes_por_cpf.get(data["cliente_cpf"])
+        if cliente:
+            conta = ContaCorrente(numero=data["numero"], cliente=cliente)
+            conta._saldo = data["saldo"]
+            for t_data in data["historico"]:
+                TransacaoClasse = Saque if t_data["tipo"] == "Saque" else Deposito
+                transacao = TransacaoClasse(t_data["valor"])
+                data_transacao = datetime.fromisoformat(t_data["data"])
+                conta.historico._transacoes.append((data_transacao, transacao))
+            contas.append(conta)
+            cliente.adicionar_conta(conta)
+
+    return clientes, contas
+
+def salvar_dados_json(clientes: List[Cliente], contas: List[Conta], caminho_arquivo: str):
+    """Salva os dados de clientes e contas em um arquivo JSON.
+
+    Converte as listas de objetos Cliente e Conta em um formato de dicionário
+    serializável e os grava no arquivo especificado com formatação legível.
+
+    Note:
+        A estrutura do JSON é projetada para evitar redundância, salvando
+        clientes e contas separadamente e usando o CPF como chave de ligação.
+
+    Args:
+        clientes (List[Cliente]): A lista de objetos Cliente a ser salva.
+        contas (List[Conta]): A lista de objetos Conta a ser salva.
+        caminho_arquivo (str): O caminho para o arquivo de dados JSON.
+    """
+    dados = {"clientes": [], "contas": []}
+    for cliente in clientes:
+        dados["clientes"].append({"nome": cliente.nome, "cpf": cliente.cpf})
+
+    for conta in contas:
+        historico_formatado = [{
+                "tipo": type(transacao).__name__,
+                "valor": transacao.valor,
+                "data": data.isoformat()
+            } for data, transacao in conta.historico.transacoes]
+        dados["contas"].append({
+            "numero": conta.numero,
+            "agencia": conta.agencia,
+            "saldo": conta.saldo,
+            "cliente_cpf": conta.cliente.cpf,
+            "historico": historico_formatado
+        })
+    with open(caminho_arquivo, 'w', encoding='utf-8') as f:
+        json.dump(dados, f, indent=4, ensure_ascii=False)
+
 def filtrar_cliente(cpf: str, clientes: List[Cliente]) -> Optional[Cliente]:
     """Busca um cliente na lista de clientes pelo seu CPF."""
     clientes_filtrados = [c for c in clientes if c.cpf == cpf]
     return clientes_filtrados[0] if clientes_filtrados else None
 
 def recuperar_conta_cliente(cliente: Cliente) -> Optional[Conta]:
-    """Recupera a primeira conta associada a um cliente."""
+    """Recupera a primeira conta associada a um cliente.
+
+    Note:
+        Esta é uma simplificação. Em um sistema real, o usuário poderia
+        escolher entre múltiplas contas caso possuísse mais de uma.
+    """
     if not cliente.contas:
         return None
     return cliente.contas[0]
 
 def executar_deposito(clientes: List[Cliente]):
-    """Orquestra a operação de depósito, tratando exceções."""
+    """Orquestra o fluxo de depósito para um cliente.
+
+    Solicita o CPF, valida o cliente e a conta, e então pede o valor do
+    depósito. Trata exceções de negócio (ex: valor inválido) e de entrada
+    de dados.
+
+    Args:
+        clientes (List[Cliente]): A lista de clientes do sistema.
+    """
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
     if not cliente:
@@ -392,7 +456,15 @@ def executar_deposito(clientes: List[Cliente]):
         exibir_mensagem(str(e), sucesso=False)
 
 def executar_saque(clientes: List[Cliente]):
-    """Orquestra a operação de saque, tratando exceções."""
+    """Orquestra o fluxo de saque para um cliente.
+
+    Solicita o CPF, valida o cliente e a conta, e então pede o valor do
+    saque. Trata exceções de negócio (ex: saldo, limites) e de entrada
+    de dados.
+
+    Args:
+        clientes (List[Cliente]): A lista de clientes do sistema.
+    """
     cpf = input("Informe o CPF do cliente: ")
     cliente = filtrar_cliente(cpf, clientes)
     if not cliente:
@@ -492,10 +564,14 @@ def listar_contas(contas: List[Conta]):
         print(textwrap.dedent(linha))
 
 def main():
-    """Função principal que inicializa e executa o loop do sistema bancário."""
+    """Função principal que orquestra o ciclo de vida da aplicação.
+
+    Inicializa o sistema, carrega os dados salvos de um arquivo JSON (se existir),
+    executa o loop principal de interação com o usuário e, ao final, salva
+    o estado atual da aplicação de volta no arquivo JSON.
+    """
     limpar_tela()
-    clientes: List[Cliente] = []
-    contas: List[Conta] = []
+    clientes, contas = carregar_dados_json(NOME_ARQUIVO_DADOS)
 
     while True:
         opcao = menu_principal()
@@ -514,7 +590,8 @@ def main():
         elif opcao == 'lc':
             listar_contas(contas)
         elif opcao == 'q':
-            print("Encerrando o sistema... Obrigado!")
+            salvar_dados_json(clientes, contas, NOME_ARQUIVO_DADOS)
+            print("Dados salvos. Encerrando o sistema... Obrigado!")
             break
         else:
             exibir_mensagem("Opção inválida!", sucesso=False)
