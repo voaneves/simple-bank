@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/simple-bank">
-    <img src="https://github.com/voaneves/simple-bank/assets/img/logo.svg" alt="Logo" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/voaneves/simple-bank/67e4a88ad634691f95d406360402d6aa088c4d63/assets/img/logo.svg" alt="Logo" width="160" height="160">
   </a>
   <h3 align="center">Simple Bank</h3>
   <p align="center">
