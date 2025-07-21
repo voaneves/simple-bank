@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/simple-bank">
-    <img src="https://raw.githubusercontent.com/voaneves/simple-bank/67e4a88ad634691f95d406360402d6aa088c4d63/assets/img/logo.svg" alt="Logo" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/img/logo.svg" alt="Logo" width="160" height="160">
   </a>
   <h3 align="center">Simple Bank</h3>
   <p align="center">
@@ -41,6 +41,7 @@
       <ul>
         <li><a href="#-princípios-da-programação-orientada-a-objetos-oop">Princípios da Programação Orientada a Objetos (OOP)</a></li>
         <li><a href="#-separação-de-responsabilidades">Separação de Responsabilidades</a></li>
+        <li><a href="#-tratamento-de-erros-e-robustez">Tratamento de Erros e Robustez</a></li>
       </ul>
     </li>
     <li>
@@ -60,7 +61,7 @@
 
 "Simple Bank" é uma aplicação de console desenvolvida em Python que simula as operações fundamentais de um sistema bancário. O projeto nasceu como um desafio técnico para aplicar e demonstrar, de forma clara e prática, os conceitos essenciais da engenharia de software e da programação orientada a objetos.
 
-O objetivo não é ser um produto financeiro, mas sim um portfólio robusto que ilustra a habilidade de estruturar um código limpo, modular, documentado e de fácil manutenção, mesmo em uma aplicação de escopo definido. Ele serve como uma prova de conceito de como modelar um domínio do mundo real em código.
+O objetivo não é ser um produto financeiro, mas sim um portfólio robusto que ilustra a habilidade de estruturar um código limpo, modular e de fácil manutenção. **A versão 2.0 evolui a arquitetura para incluir um sistema de tratamento de erros com exceções customizadas e validação de entrada, tornando o software significativamente mais confiável e profissional.**
 
 <div align="center">
   <img src="assets/img/screenshot.png" alt="Screenshot do terminal executando o Simple Bank">
@@ -76,29 +77,35 @@ Este projeto foi construído inteiramente com recursos nativos do Python, demons
     * `os` e `sys` para interação com o sistema.
     * `datetime` para timestamp das transações.
     * `abc` para criação de classes abstratas.
-
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+    * `textwrap` para formatação de texto. <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
 ## 🏛️ Arquitetura e Design de Código
 
-A espinha dorsal do "Simple Bank" é sua arquitetura orientada a objetos. A estrutura foi pensada para ser extensível e testável, seguindo princípios de design consagrados.
+A espinha dorsal do "Simple Bank" é sua arquitetura orientada a objetos. A estrutura foi pensada para ser extensível, testável e robusta.
 
 ### 💡 Princípios da Programação Orientada a Objetos (OOP)
 
 Os quatro pilares da OOP são a fundação deste projeto:
 
-1.  **Abstração:** Classes como `Transacao` definem um "contrato" genérico, forçando implementações concretas (`Saque`, `Deposito`) a terem uma interface comum. Isso torna o sistema mais flexível.
-2.  **Encapsulamento:** Os atributos das classes (`_saldo`, `_transacoes`) são protegidos, e o acesso a eles é controlado por métodos e propriedades, garantindo a integridade dos dados.
-3.  **Herança:** A classe `ContaCorrente` herda de uma `Conta` base, reutilizando código e adicionando funcionalidades específicas, como limites de saque, de forma limpa.
-4.  **Polimorfismo:** O método `registrar()` de uma transação se comporta de maneira diferente dependendo se o objeto é um `Saque` ou um `Deposito`, permitindo que o sistema trate diferentes operações de forma uniforme.
+1.  **Abstração:** Classes como `Transacao` definem um "contrato" genérico.
+2.  **Encapsulamento:** Os atributos das classes (`_saldo`) são protegidos e acessados via métodos.
+3.  **Herança:** A classe `ContaCorrente` herda de `Conta`, especializando o comportamento.
+4.  **Polimorfismo:** O método `registrar()` se comporta de maneira diferente para `Saque` e `Deposito`.
 
 ### 🗂️ Separação de Responsabilidades
 
 O código é organizado em camadas lógicas para maior clareza:
 
--   **Modelo (Model):** As classes (`Cliente`, `Conta`, `Transacao`, etc.) que representam os dados e as regras de negócio do banco. Elas são independentes da interface.
--   **Visão (View):** Funções simples (`exibir_mensagem`, `limpar_tela`) responsáveis por toda a interação visual com o usuário no terminal.
--   **Controle (Controller):** Funções (`executar_saque`, `criar_cliente`) que orquestram a interação entre a visão e o modelo, respondendo às entradas do usuário.
+-   **Modelo (Model):** As classes (`Cliente`, `Conta`, etc.) que representam as regras de negócio do banco.
+-   **Visão (View):** Funções (`exibir_mensagem`, `limpar_tela`) responsáveis pela interação visual.
+-   **Controle (Controller):** Funções (`executar_saque`, `criar_cliente`) que orquestram a interação entre a visão e o modelo.
+
+### 🛡️ Tratamento de Erros e Robustez
+
+A versão 2.0 foca em tornar o sistema mais confiável e profissional através de duas estratégias principais:
+
+1.  **Exceções Customizadas:** Em vez de imprimir erros diretamente da lógica de negócio, o sistema agora lança exceções específicas (ex: `SaldoInsuficienteError`, `LimiteSaqueError`). Isso **desacopla totalmente o modelo da visão**, permitindo que a lógica do banco seja reutilizada em outras interfaces (como uma API web) sem alterações. A camada de controle é responsável por capturar essas exceções e apresentar mensagens amigáveis ao usuário.
+2.  **Validação de Entrada:** Foi implementada uma função para validar dados de entrada, como o CPF, garantindo que apenas informações no formato correto sejam processadas. Isso previne erros e aumenta a integridade dos dados do sistema.
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
@@ -119,7 +126,8 @@ A única dependência é ter o Python 3 instalado em sua máquina.
 
 1.  Clone o repositório para sua máquina local.
     ```sh
-    git clone [https://github.com/SEU-USUARIO/simple-bank.git](https://github.com/SEU-USUARIO/simple-bank.git)
+    # Corrigido com seu nome de usuário
+    git clone [https://github.com/voaneves/simple-bank.git](https://github.com/voaneves/simple-bank.git)
     ```
 2.  Navegue até a pasta do projeto.
     ```sh
@@ -127,9 +135,9 @@ A única dependência é ter o Python 3 instalado em sua máquina.
     ```
 3.  Execute o script principal.
     ```sh
-    python nome_do_arquivo.py
+    # Sugestão de nome para o arquivo v2.0
+    python simple_bank_v2.py
     ```
-    *(Substitua `nome_do_arquivo.py` por `main.py` ou `simple_bank.py`)*
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
