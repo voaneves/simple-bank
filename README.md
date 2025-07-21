@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/simple-bank">
-    <img src="" alt="Logo" width="160" height="160">
+    <img src="https://github.com/voaneves/simple-bank/assets/img/logo.svg" alt="Logo" width="160" height="160">
   </a>
   <h3 align="center">Simple Bank</h3>
   <p align="center">
@@ -163,13 +163,13 @@ Este projeto é um reflexo do aprendizado contínuo e foi inspirado por diversos
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
-[contributors-shield]: https://img.shields.io/github/contributors/SEU-USUARIO/simple-bank.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/voaneves/simple-bank.svg?style=for-the-badge
 [contributors-url]: https://github.com/voaneves/simple-bank/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/SEU-USUARIO/simple-bank.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/voaneves/simple-bank.svg?style=for-the-badge
 [forks-url]: https://github.com/voaneves/simple-bank/network/members
-[stars-shield]: https://img.shields.io/github/stars/SEU-USUARIO/simple-bank.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/voaneves/simple-bank.svg?style=for-the-badge
 [stars-url]: https://github.com/voaneves/simple-bank/stargazers
-[issues-shield]: https://img.shields.io/github/issues/SEU-USUARIO/simple-bank.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/voaneves/simple-bank.svg?style=for-the-badge
 [issues-url]: https://github.com/voaneves/simple-bank/issues
-[license-shield]: https://img.shields.io/github/license/SEU-USUARIO/simple-bank.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/voaneves/simple-bank.svg?style=for-the-badge
 [license-url]: https://github.com/voaneves/simple-bank/blob/main/LICENSE.txt
