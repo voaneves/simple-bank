@@ -2,7 +2,11 @@
 
 <div align="center">
 
-<img alt="Logo do Simple Bank: um escudo azul-escuro com um cifrão verde" src="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/img/logo.svg" width="112" height="112" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/logo/logo-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/logo/logo-light.svg" />
+  <img alt="Logo do Simple Bank: um prédio de banco com colunas, com um ponto vermelho para a moeda" src="https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/logo/logo-light.svg" width="112" height="112" />
+</picture>
 
 <h1>Simple Bank</h1>
 
