@@ -156,7 +156,7 @@ Se você tem uma sugestão para melhorar este projeto, por favor, faça um fork 
 
 ## 📜 Licença
 
-Distribuído sob a Licença MIT. Veja `LICENSE.txt` para mais informações.
+Distribuído sob a Licença MIT. Veja `LICENSE` para mais informações.
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
@@ -179,4 +179,4 @@ Este projeto é um reflexo do aprendizado contínuo e foi inspirado por diversos
 [issues-shield]: https://img.shields.io/github/issues/voaneves/simple-bank.svg?style=for-the-badge
 [issues-url]: https://github.com/voaneves/simple-bank/issues
 [license-shield]: https://img.shields.io/github/license/voaneves/simple-bank.svg?style=for-the-badge
-[license-url]: https://github.com/voaneves/simple-bank/blob/main/LICENSE.txt
+[license-url]: https://github.com/voaneves/simple-bank/blob/main/LICENSE
