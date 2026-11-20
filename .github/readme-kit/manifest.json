@@ -1,0 +1,59 @@
+{
+  "repo": "simple-bank",
+  "branch": "main",
+  "lang": "pt-BR",
+  "license": "MIT",
+  "name": "Simple Bank",
+  "tagline": "Simulador de banco no terminal, em Python, com contas, depósitos e saques.",
+  "description": "Simulador de operações bancárias em console, em Python, focado em código limpo, POO, exceções e validação de entrada.",
+  "logo": {
+    "existing": "assets/img/logo.svg",
+    "width": 160,
+    "height": 160
+  },
+  "buttons": [
+    {
+      "id": "landing",
+      "text": "Ver a landing page",
+      "kind": "primary",
+      "font": "sans",
+      "href": "https://voaneves.github.io/simple-bank/",
+      "landing": false
+    },
+    {
+      "id": "code",
+      "text": "Ver o código",
+      "kind": "secondary",
+      "href": "https://github.com/voaneves/simple-bank/blob/main/simple_bank.py",
+      "landing_kind": "primary",
+      "font": "sans"
+    },
+    {
+      "id": "hire",
+      "text": "Vamos conversar",
+      "kind": "primary",
+      "font": "sans",
+      "href": "https://voaneves.com/#contato",
+      "landing": false
+    },
+    {
+      "id": "site",
+      "text": "voaneves.com",
+      "kind": "secondary",
+      "font": "sans",
+      "href": "https://voaneves.com/",
+      "landing": false
+    }
+  ],
+  "features": [
+    "Clientes, contas e transações (saque e depósito) em classes Python.",
+    "Exceções customizadas, como SaldoInsuficienteError.",
+    "Validação de entrada, incluindo CPF."
+  ],
+  "image": {
+    "src": "https://raw.githubusercontent.com/voaneves/simple-bank/main/assets/img/screenshot.png",
+    "alt": "Screenshot do terminal executando o Simple Bank"
+  },
+  "landing": true,
+  "live_url": "https://voaneves.github.io/simple-bank/"
+}
